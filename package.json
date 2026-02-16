@@ -1,0 +1,50 @@
+{
+	"name": "using-safe",
+	"version": "0.0.0-development",
+	"description": "Safely use and dispose resources, even without the `using` declaration",
+	"license": "MIT",
+	"repository": "mstuart/using-safe",
+	"author": {
+		"name": "Mark Stuart",
+		"email": "mstuart@users.noreply.github.com",
+		"url": "https://github.com/mstuart"
+	},
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"default": "./index.js"
+		}
+	},
+	"sideEffects": false,
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"test": "xo && ava && tsd"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"using",
+		"dispose",
+		"safe",
+		"resource",
+		"cleanup",
+		"disposable",
+		"asyncdisposable",
+		"finally"
+	],
+	"xo": {
+		"rules": {
+			"no-use-extend-native/no-use-extend-native": "off"
+		}
+	},
+	"devDependencies": {
+		"ava": "^6",
+		"tsd": "^0.31",
+		"xo": "^0.60"
+	}
+}
