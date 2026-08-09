@@ -9,6 +9,8 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
   <a href="https://www.npmjs.com/package/using-safe"><img src="https://img.shields.io/npm/v/using-safe?label=npm" alt="npm"></a>
   <img src="https://img.shields.io/badge/node-%E2%89%A520-339933.svg" alt="Node 20+">
+  <a href="https://deepwiki.com/mstuart/using-safe"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+  <a href="https://socket.dev/npm/package/using-safe"><img src="https://socket.dev/api/badge/npm/package/using-safe" alt="Socket"></a>
 </p>
 
 ---
