@@ -1,9 +1,9 @@
-export type DisposableResource = {
-	[Symbol.dispose]?: () => void;
-	[Symbol.asyncDispose]?: () => void | Promise<void>;
-	close?: () => void | Promise<void>;
-	destroy?: () => void | Promise<void>;
-};
+export interface DisposableResource {
+  close?: () => void | Promise<void>;
+  destroy?: () => void | Promise<void>;
+  [Symbol.dispose]?: () => void;
+  [Symbol.asyncDispose]?: () => void | Promise<void>;
+}
 
 /**
 Safely use an async resource and dispose it when done.
@@ -25,8 +25,8 @@ const result = await usingSafe(resource, async (r) => {
 ```
 */
 export default function usingSafe<T, R>(
-	resource: T & DisposableResource,
-	function_: (resource: T) => R | Promise<R>,
+  resource: T & DisposableResource,
+  function_: (resource: T) => R | Promise<R>
 ): Promise<R>;
 
 /**
@@ -49,6 +49,6 @@ const result = usingSafeSync(resource, (r) => {
 ```
 */
 export function usingSafeSync<T, R>(
-	resource: T & DisposableResource,
-	function_: (resource: T) => R,
+  resource: T & DisposableResource,
+  function_: (resource: T) => R
 ): R;

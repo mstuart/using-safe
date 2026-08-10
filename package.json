@@ -1,50 +1,48 @@
 {
-	"name": "using-safe",
-	"version": "1.0.0",
-	"description": "Safely use and dispose resources, even without the `using` declaration",
-	"license": "MIT",
-	"repository": "mstuart/using-safe",
-	"author": {
-		"name": "Mark Stuart",
-		"email": "mstuart@users.noreply.github.com",
-		"url": "https://github.com/mstuart"
-	},
-	"type": "module",
-	"exports": {
-		".": {
-			"types": "./index.d.ts",
-			"default": "./index.js"
-		}
-	},
-	"sideEffects": false,
-	"engines": {
-		"node": ">=22"
-	},
-	"scripts": {
-		"test": "xo && ava && tsd"
-	},
-	"files": [
-		"index.js",
-		"index.d.ts"
-	],
-	"keywords": [
-		"using",
-		"dispose",
-		"safe",
-		"resource",
-		"cleanup",
-		"disposable",
-		"asyncdisposable",
-		"finally"
-	],
-	"xo": {
-		"rules": {
-			"no-use-extend-native/no-use-extend-native": "off"
-		}
-	},
-	"devDependencies": {
-		"ava": "^8",
-		"tsd": "^0.33",
-		"xo": "^3.0"
-	}
+  "name": "using-safe",
+  "version": "1.0.0",
+  "description": "Safely use and dispose resources, even without the `using` declaration",
+  "keywords": [
+    "using",
+    "dispose",
+    "safe",
+    "resource",
+    "cleanup",
+    "disposable",
+    "asyncdisposable",
+    "finally"
+  ],
+  "repository": "mstuart/using-safe",
+  "license": "MIT",
+  "author": {
+    "name": "Mark Stuart",
+    "email": "mstuart@users.noreply.github.com",
+    "url": "https://github.com/mstuart"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "scripts": {
+    "check": "ultracite check",
+    "fix": "ultracite fix",
+    "test": "ava && tsd"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.6",
+    "ava": "^8",
+    "tsd": "^0.33",
+    "ultracite": "7.10.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
 }
