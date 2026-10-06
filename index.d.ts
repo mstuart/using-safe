@@ -69,6 +69,9 @@ const result = usingSafeSync(resource, (r) => {
 ```
 */
 export function usingSafeSync<T extends SyncDisposableResource, R>(
-  resource: T & SynchronousDisposal<NoInfer<T>>,
-  function_: (resource: T) => R & Synchronous<NoInfer<R>>
+  resource: T,
+  function_: (resource: T) => R,
+  ...syncOnly: [SynchronousDisposal<T> & Synchronous<R>] extends [never]
+    ? [never]
+    : []
 ): R;
