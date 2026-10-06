@@ -1,5 +1,74 @@
-import { expectType } from "tsd";
+import { expectError, expectType } from "tsd";
 import usingSafe, { usingSafeSync } from "./index.js";
+
+expectError(
+  usingSafeSync(
+    {
+      close() {
+        /* Intentionally empty disposal fixture. */
+      },
+    },
+    async () => 42
+  )
+);
+expectError(
+  usingSafeSync(
+    {
+      async close() {
+        /* Intentionally empty disposal fixture. */
+      },
+    },
+    () => 42
+  )
+);
+expectError(
+  usingSafeSync(
+    {
+      async destroy() {
+        /* Intentionally empty disposal fixture. */
+      },
+    },
+    () => 42
+  )
+);
+expectError(
+  usingSafeSync(
+    {
+      async [Symbol.asyncDispose]() {
+        /* Intentionally empty disposal fixture. */
+      },
+    },
+    () => 42
+  )
+);
+
+expectType<number>(
+  usingSafeSync(
+    {
+      close() {
+        /* Intentionally empty disposal fixture. */
+      },
+      async doWork() {
+        /* Intentionally empty disposal fixture. */
+      },
+    },
+    () => 42
+  )
+);
+
+expectType<number>(
+  usingSafeSync(
+    {
+      [Symbol.dispose]() {
+        /* Intentionally empty disposal fixture. */
+      },
+      async close() {
+        /* Intentionally empty disposal fixture. */
+      },
+    },
+    () => 42
+  )
+);
 
 // Async version returns Promise
 expectType<Promise<string>>(

@@ -3,6 +3,78 @@ import usingSafe, { usingSafeSync } from "./index.js";
 
 const noop = () => undefined;
 
+test("usingSafe preserves both use and disposal failures", async (t) => {
+  const useError = new Error("Use failed");
+  const disposalError = new Error("Disposal failed");
+  const error = await t.throwsAsync(
+    usingSafe(
+      {
+        close() {
+          throw disposalError;
+        },
+      },
+      () => {
+        throw useError;
+      }
+    ),
+    { instanceOf: AggregateError }
+  );
+  t.deepEqual(error.errors, [useError, disposalError]);
+});
+
+test("usingSafeSync preserves both use and disposal failures", (t) => {
+  const useError = new Error("Use failed");
+  const disposalError = new Error("Disposal failed");
+  const error = t.throws(
+    () =>
+      usingSafeSync(
+        {
+          close() {
+            throw disposalError;
+          },
+        },
+        () => {
+          throw useError;
+        }
+      ),
+    { instanceOf: AggregateError }
+  );
+  t.deepEqual(error.errors, [useError, disposalError]);
+});
+
+test("disposal-only failures keep their original identity", async (t) => {
+  const error = new Error("Disposal failed");
+  const resource = {
+    close() {
+      throw error;
+    },
+  };
+  t.is(await t.throwsAsync(usingSafe(resource, noop)), error);
+  t.is(
+    t.throws(() => usingSafeSync(resource, noop)),
+    error
+  );
+});
+
+test("sync rejects async-dispose-only resources before invoking the callback", (t) => {
+  let called = false;
+  t.throws(
+    () =>
+      usingSafeSync(
+        {
+          async [Symbol.asyncDispose]() {
+            /* Intentionally empty disposal fixture. */
+          },
+        },
+        () => {
+          called = true;
+        }
+      ),
+    { instanceOf: TypeError }
+  );
+  t.false(called);
+});
+
 // UsingSafe (async) tests
 
 test("usingSafe disposes resource after use via Symbol.asyncDispose", async (t) => {

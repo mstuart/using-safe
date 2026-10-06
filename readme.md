@@ -45,9 +45,13 @@ Returns the result of `function_`.
 
 Synchronous version.
 
+Both the callback and the selected disposal method must be synchronous. TypeScript rejects promise-returning callbacks and disposers; use `usingSafe` for asynchronous work. A resource with only `Symbol.asyncDispose` is rejected before the callback runs.
+
 Disposal order: `Symbol.dispose` -> `.close()` -> `.destroy()`
 
 Returns the result of `function_`.
+
+If both resource use and disposal fail, either API throws an `AggregateError` whose `errors` array contains the use error first and disposal error second. A single failure is rethrown unchanged.
 
 ## Related
 
