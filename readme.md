@@ -35,7 +35,7 @@ const result = await usingSafe(resource, async (r) => {
 
 ### usingSafe(resource, function_)
 
-Runs `function_` with `resource`, then disposes `resource` in a `finally` block.
+Runs `function_` with `resource`, then disposes `resource`, including when `function_` throws.
 
 Disposal order: `Symbol.asyncDispose` -> `Symbol.dispose` -> `.close()` -> `.destroy()`
 
