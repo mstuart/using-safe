@@ -68,7 +68,7 @@ const result = usingSafeSync(resource, (r) => {
 // Resource is automatically disposed
 ```
 */
-export function usingSafeSync<T, R>(
-  resource: T & SyncDisposableResource & SynchronousDisposal<T>,
-  function_: (resource: T) => R & Synchronous<R>
+export function usingSafeSync<T extends SyncDisposableResource, R>(
+  resource: T & SynchronousDisposal<NoInfer<T>>,
+  function_: (resource: T) => R & Synchronous<NoInfer<R>>
 ): R;
