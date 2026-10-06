@@ -5,6 +5,24 @@ export interface DisposableResource {
   [Symbol.asyncDispose]?: () => void | Promise<void>;
 }
 
+export type SyncDisposableResource =
+  | { [Symbol.dispose]: () => void }
+  | { close: () => void }
+  | { destroy: () => void };
+
+type Synchronous<T> =
+  Extract<T, PromiseLike<unknown>> extends never ? unknown : never;
+
+type SynchronousDisposal<T> = T extends {
+  [Symbol.dispose]: (...args: never[]) => infer R;
+}
+  ? Synchronous<R>
+  : T extends { close: (...args: never[]) => infer R }
+    ? Synchronous<R>
+    : T extends { destroy: (...args: never[]) => infer R }
+      ? Synchronous<R>
+      : never;
+
 /**
 Safely use an async resource and dispose it when done.
 
@@ -32,6 +50,8 @@ export default function usingSafe<T, R>(
 /**
 Safely use a sync resource and dispose it when done.
 
+The callback and selected disposal method must be synchronous.
+
 Disposal order: `Symbol.dispose` -> `.close()` -> `.destroy()`
 
 @param resource - The resource to use.
@@ -48,7 +68,10 @@ const result = usingSafeSync(resource, (r) => {
 // Resource is automatically disposed
 ```
 */
-export function usingSafeSync<T, R>(
-  resource: T & DisposableResource,
-  function_: (resource: T) => R
+export function usingSafeSync<T extends SyncDisposableResource, R>(
+  resource: T,
+  function_: (resource: T) => R,
+  ...syncOnly: [SynchronousDisposal<T> & Synchronous<R>] extends [never]
+    ? [never]
+    : []
 ): R;

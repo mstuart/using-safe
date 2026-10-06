@@ -1,3 +1,11 @@
+function combinedError(useError, disposalError) {
+  return new AggregateError(
+    [useError, disposalError],
+    "Resource use and disposal both failed",
+    { cause: disposalError }
+  );
+}
+
 function dispose(resource) {
   if (typeof resource[Symbol.dispose] === "function") {
     resource[Symbol.dispose]();
@@ -47,11 +55,27 @@ export default async function usingSafe(resource, function_) {
     throw new TypeError("Resource must not be null or undefined");
   }
 
+  let useFailed = false;
+  let useError;
+  let result;
   try {
-    return await function_(resource);
-  } finally {
-    await asyncDispose(resource);
+    result = await function_(resource);
+  } catch (error) {
+    useFailed = true;
+    useError = error;
   }
+  try {
+    await asyncDispose(resource);
+  } catch (error) {
+    if (useFailed) {
+      throw combinedError(useError, error);
+    }
+    throw error;
+  }
+  if (useFailed) {
+    throw useError;
+  }
+  return result;
 }
 
 /**
@@ -66,9 +90,33 @@ export function usingSafeSync(resource, function_) {
     throw new TypeError("Resource must not be null or undefined");
   }
 
-  try {
-    return function_(resource);
-  } finally {
-    dispose(resource);
+  if (
+    typeof resource[Symbol.dispose] !== "function" &&
+    typeof resource.close !== "function" &&
+    typeof resource.destroy !== "function"
+  ) {
+    throw new TypeError("Expected a synchronous disposal method");
   }
+
+  let useFailed = false;
+  let useError;
+  let result;
+  try {
+    result = function_(resource);
+  } catch (error) {
+    useFailed = true;
+    useError = error;
+  }
+  try {
+    dispose(resource);
+  } catch (error) {
+    if (useFailed) {
+      throw combinedError(useError, error);
+    }
+    throw error;
+  }
+  if (useFailed) {
+    throw useError;
+  }
+  return result;
 }
