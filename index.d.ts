@@ -44,8 +44,8 @@ const result = await usingSafe(resource, async (r) => {
 */
 export default function usingSafe<T, R>(
   resource: T & DisposableResource,
-  function_: (resource: T) => R | Promise<R>
-): Promise<R>;
+  function_: (resource: T) => R | PromiseLike<R>
+): Promise<Awaited<R>>;
 
 /**
 Safely use a sync resource and dispose it when done.

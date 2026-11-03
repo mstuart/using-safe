@@ -131,3 +131,14 @@ expectType<Promise<number>>(
     }
   )
 );
+
+declare const thenable: PromiseLike<number>;
+const thenableResult = usingSafe(
+  {
+    close() {
+      /* noop */
+    },
+  },
+  () => thenable
+);
+expectType<Promise<number>>(thenableResult);
